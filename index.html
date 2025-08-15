@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Independence Day Animation</title>
-<!-- Added Google Font for beautiful Hindi rendering -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
 <style>
     body {
@@ -24,7 +23,7 @@
     color: rgba(255, 255, 255, 0.6); /* Semi-transparent white */
     font-size: 16px;
     font-family: "Noto Sans Devanagari", Arial, sans-serif;
-    pointer-events: none; /* This makes sure it doesn't interfere with the canvas */
+    pointer-events: none; /* no canvas interference */
 }
 </style>
 </head>
@@ -32,7 +31,8 @@
 <canvas id="canvas"></canvas>
 
 <script>
-// Colors
+
+// Color scheme
 const COLORS = {
     saffron: "#FF9933",
     white: "#FFFFFF",
@@ -45,15 +45,14 @@ let ctx = canvas.getContext("2d");
 let w, h, particles = [];
 let bgShift = 0;
 
-// Particle class definition
 class Particle {
     constructor(targetX, targetY, color) {
-        // Give particles a random starting position for the animation effect
+        //random starting position of particles for animation
         this.x = Math.random() * w;
         this.y = Math.random() * h;
         this.size = 2;
         this.color = color;
-        // This is their final "home" position
+        //final positions
         this.baseX = targetX;
         this.baseY = targetY;
     }
@@ -67,10 +66,10 @@ class Particle {
         ctx.shadowBlur = 0; // reset
     }
     update() {
-        // Easing physics to move particles to their base position
+        //move particles to their base position
         let dx = this.baseX - this.x;
         let dy = this.baseY - this.y;
-        // --- CHANGE: Increased speed for quicker formation ---
+        // increased speed for faster word formation
         this.x += dx / 10; 
         this.y += dy / 10;
     }
@@ -82,18 +81,18 @@ function resize() {
     h = canvas.height = window.innerHeight;
 }
 
-// --- Main drawing function for the entire composition ---
+//Main drawing function
 function drawFinalComposition(offCtx) {
     // Clear the offscreen canvas before drawing
     offCtx.clearRect(0, 0, w, h);
 
-    // --- Responsive Layout Calculations ---
+    //Responsive Layout 
     const isPortrait = h > w;
     const topTextY = h * 0.18;
     const flagY = h * 0.5;
     const bottomTextY = h * 0.82;
     
-    // --- 1. Draw "जय हिंद" at the top ---
+    //"जय हिंद"
     const topFontSize = isPortrait ? w / 8 : h / 8;
     offCtx.font = `bold ${topFontSize}px "Noto Sans Devanagari", Arial, sans-serif`;
     offCtx.textAlign = "center";
@@ -105,7 +104,7 @@ function drawFinalComposition(offCtx) {
     offCtx.fillStyle = topGradient;
     offCtx.fillText("जय हिंद", w / 2, topTextY);
 
-    // --- 2. Draw the Flag in the middle ---
+    //Tricolor
     const flagHeight = isPortrait ? w * 0.4 : h * 0.4;
     const flagWidth = flagHeight * 1.5;
     const x0 = (w - flagWidth) / 2;
@@ -136,7 +135,7 @@ function drawFinalComposition(offCtx) {
         offCtx.stroke();
     }
 
-    // --- 3. Draw "वंदे मातरम्" at the bottom ---
+    //"वंदे मातरम्"
     const bottomFontSize = isPortrait ? w / 7 : h / 7;
     offCtx.font = `bold ${bottomFontSize}px "Noto Sans Devanagari", Arial, sans-serif`;
     const bottomGradient = offCtx.createLinearGradient(0, bottomTextY - bottomFontSize/2, 0, bottomTextY + bottomFontSize/2);
@@ -151,13 +150,13 @@ function drawFinalComposition(offCtx) {
 function initParticles() {
     particles = [];
 
-    // Use an offscreen canvas to generate the final image data
+    //offscreen canvas to generate the final image data
     let offCanvas = document.createElement("canvas");
     let offCtx = offCanvas.getContext("2d", { willReadFrequently: true });
     offCanvas.width = w;
     offCanvas.height = h;
 
-    // Draw the entire composition to the offscreen canvas
+    // Draw to the offscreen canvas
     drawFinalComposition(offCtx);
 
     let imageData = offCtx.getImageData(0, 0, w, h);
@@ -177,17 +176,16 @@ function initParticles() {
     }
 }
 
-// --- New animated background with subtle tricolor gradient ---
+//animated background with tricolor gradient
 function drawBackground() {
     bgShift += 0.003;
-    let lightShift = Math.sin(bgShift) * 3; // A small value to make it "breathe"
+    let lightShift = Math.sin(bgShift) * 3; //Dynamic non static bg
 
     let grad = ctx.createLinearGradient(0, 0, 0, h);
 
-    // --- CHANGE: Increased lightness of background colors to make them more visible ---
-    grad.addColorStop(0, `hsl(30, 45%, ${25 + lightShift}%)`);    // Softer, brighter saffron
-    grad.addColorStop(0.5, `hsl(210, 15%, ${30 + lightShift}%)`);  // Softer, brighter cool gray (for white)
-    grad.addColorStop(1, `hsl(140, 35%, ${25 + lightShift}%)`);  // Softer, brighter green
+    grad.addColorStop(0, `hsl(30, 45%, ${25 + lightShift}%)`);    // Softer saffron
+    grad.addColorStop(0.5, `hsl(210, 15%, ${30 + lightShift}%)`);  // Softer brighter cool gray (for white)
+    grad.addColorStop(1, `hsl(140, 35%, ${25 + lightShift}%)`);  // Softer green
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
@@ -202,19 +200,19 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// --- Main Initialization Logic ---
+//  Initialization Logic
 function initialize() {
     resize();
     initParticles();
 }
 
-// Wait for the custom font to be loaded before doing anything
+//Load custom font before starting animation
 document.fonts.ready.then(() => {
     initialize();
     animate();
 });
 
-// Re-initialize particles on resize after the initial load
+// Reinitialize particles on resize after they load initially
 window.addEventListener("resize", initialize);
 
 </script>
