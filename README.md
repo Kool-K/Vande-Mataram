@@ -28,4 +28,4 @@ You can easily tweak the animation by changing the constant variables at the top
 
 ---
 
-*Created with passion to celebrate the spirit of India! Jai Hind! *🇮🇳
+*Created with passion to celebrate the spirit of India! Jai Hind! Vande Mataram!*
